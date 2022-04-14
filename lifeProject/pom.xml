@@ -11,7 +11,8 @@
 	<groupId>com.plife</groupId>
 	<artifactId>lifeProject</artifactId>
 	<version>1.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
+	<!-- <packaging>war</packaging> -->
 	<name>lifeProject</name>
 	<description>plife Spring boot Project</description>
 	<properties>
