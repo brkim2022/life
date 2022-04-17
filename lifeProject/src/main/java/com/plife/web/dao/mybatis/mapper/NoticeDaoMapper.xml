@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plife.web.dao.NoticeDao">
+
+	<!-- 
+	<resultMap type="com.pbrk.web.entity.NoticeView" id="noticeViewMap">
+		<result property="memberName" column="member_name" />
+	</resultMap> 
+	-->
+
+	<select id="getViewList" resultType="com.plife.web.entity.NoticeView">
+		SELECT * FROM noticeview 
+		<trim prefix="WHERE" prefixOverrides="AND | OR ">
+		<if test="query != null and query != ''">
+			${field} LIKE '%${query}%'
+		</if>
+			AND pub = #{pub}
+		</trim>
+		ORDER BY regdate DESC
+		LIMIT #{offset}, #{size}
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT count(id) COUNT FROM notice 
+		<where>
+		<if test="query != null and query != ''">
+			${field} LIKE '%${query}%'
+		</if>
+			AND pub = #{pub}
+		</where>
+	</select>	
+	
+	<select id="getView" resultType="com.plife.web.entity.NoticeView">
+		SELECT * FROM noticeview 
+		WHERE id=#{id}
+	</select>
+
+	<select id="getNext" resultType="com.plife.web.entity.Notice">
+		SELECT * FROM notice
+		WHERE regdate &gt; (SELECT regdate FROM notice WHERE id = #{id})
+		LIMIT 1;
+	</select>	
+	<select id="getPrev" resultType="com.plife.web.entity.Notice">
+		SELECT * FROM notice
+		WHERE regdate &lt; (SELECT regdate FROM notice WHERE id = #{id})
+		ORDER BY regdate DESC
+		LIMIT 1;
+	</select>
+	
+	<update id="update" parameterType="com.plife.web.entity.Notice">
+		UPDATE Notice
+		SET
+			title = #{title},
+			content = #{content} ,
+			hit = #{hit},
+			pub = #{pub}
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.plife.web.entity.Notice">
+		INSERT INTO Notice(title,content,memberId)
+		VALUES(#{title},#{content},#{memberId})
+	</insert>
+	
+	<delete id="delete">
+		DELETE from Notice
+		WHERE id=#{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		DELETE from Notice
+		WHERE id IN 
+		<foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<update id="updatePubAll">
+		UPDATE Notice
+		SET
+			pub = #{pub}
+		WHERE id IN
+		<foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	
+		<!-- update Notice
+		set
+			pub = case id
+					<foreach item="id" collection="pubIds">
+						when #{id} then 1
+					</foreach>
+					<foreach item="id" collection="closeIds">
+						when #{id} then 0
+					</foreach>
+			      end
+		where id in (
+			<foreach item="id" collection="pubIds">
+				#{id}
+			</foreach>
+			,
+			<foreach item="id" collection="closeIds">
+				#{id}
+			</foreach>
+		) -->
+		
+		<!-- update Notice
+		set
+			pub = case id
+					when 14 then 0
+					when 15 then 0
+					when 21 then 1
+					when 22 then 1
+			      end
+		where id in (14,15,21,22) -->
+	</update>
+	
+</mapper>
