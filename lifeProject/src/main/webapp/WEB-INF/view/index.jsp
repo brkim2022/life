@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>plife</h1>
+	<h1>index</h1>
 </body>
 </html>

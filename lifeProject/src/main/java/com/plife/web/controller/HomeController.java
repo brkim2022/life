@@ -8,6 +8,7 @@ public class HomeController {
 	
 	@RequestMapping("/index")
 	public String index() {
-		return "plife";
+		
+		return "index";
 	}
 }
